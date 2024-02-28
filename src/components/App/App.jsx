@@ -1,70 +1,12 @@
-import { useState, useEffect } from 'react';
-import { nanoid } from 'nanoid';
+import { getContacts } from 'redux/selectors';
+import { useSelector } from 'react-redux';
 import { BiSolidContact } from 'react-icons/bi';
-import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import ContactForm from '../ContactForm/ContactForm';
 import ContactList from '../ContactList/ContactList';
 import Filter from '../Filter/Filter';
 
-const phoneContacts = [
-  { id: 'id-1', name: 'Steve Jobs', number: '459-12-56' },
-  { id: 'id-2', name: 'Bill Gates', number: '443-89-12' },
-  { id: 'id-3', name: 'Jeff Bezos', number: '645-17-79' },
-  { id: 'id-4', name: 'Elon Musk', number: '227-91-26' },
-];
-
 const App = () => {
-  // Значення витягується з локального сховища браузера з ключем 'contacts'
-  const [contacts, setContacts] = useState(() => {
-    return JSON.parse(window.localStorage.getItem('contacts')) ?? phoneContacts; // Якщо значення не знайдено, встановлюється значення масиву phoneContacts.
-  });
-
-  const [filter, setFilter] = useState('');
-
-  // Спрацьовує при зміні стану contacts. Зберігає поточні контакти у локальному сховищі браузера з ключем 'contacts'.
-  useEffect(() => {
-    window.localStorage.setItem('contacts', JSON.stringify(contacts));
-  }, [contacts]);
-
-  // Додає новий контакт до списку контактів.
-  const addContact = contact => {
-    const isInContacts = contacts.some(
-      ({ name }) =>
-        name.toLowerCase().trim() === contact.name.toLowerCase().trim()
-    );
-    // Перевіряє, чи є контакт із таким же ім'ям у списку контактів. Якщо контакт вже існує, виводиться попередження.
-    if (isInContacts) {
-      return Notify.info(`${contact.name} is already in contacts`);
-    }
-
-    setContacts(prevContacts => [
-      ...prevContacts,
-      { id: nanoid(), ...contact },
-    ]);
-  };
-
-  // Змінює значення фільтра.
-  const changeFilter = event => {
-    setFilter(event.target.value.trim());
-  };
-
-  // Отримання відфільтрованих контактів.
-  const getVisibleContacts = () => {
-    const normalizedFilter = filter.toLowerCase();
-
-    return contacts.filter(contact =>
-      contact.name.toLowerCase().includes(normalizedFilter)
-    );
-  };
-
-  // Видалення контакту зі списку.
-  const removeContact = contactId => {
-    setContacts(prevContacts =>
-      prevContacts.filter(contact => contact.id !== contactId)
-    );
-  };
-
-  const visibleContacts = getVisibleContacts();
+  const contacts = useSelector(getContacts);
 
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
@@ -74,27 +16,21 @@ const App = () => {
           Phonebook
         </h1>
       </div>
-      <ContactForm onSubmit={addContact} />
+      <ContactForm />
       {contacts.length > 0 ? (
         <>
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Contacts
           </h2>
-          {/* Фільтр для відображення контактів */}
-          <Filter value={filter} onChangeFilter={changeFilter} />
+
+          <Filter />
         </>
       ) : (
         <p className="mt-10 text-center text-1xl font-bold leading-9 tracking-tight text-gray-600">
           Your phonebook is empty. Add first contact!
         </p>
       )}
-      {contacts.length > 0 && (
-        // Список контактів
-        <ContactList
-          contacts={visibleContacts}
-          onRemoveContact={removeContact}
-        />
-      )}
+      {contacts.length > 0 && <ContactList />}
     </div>
   );
 };

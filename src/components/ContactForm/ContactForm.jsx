@@ -1,25 +1,37 @@
 import { useState } from 'react';
 import { nanoid } from 'nanoid';
 
-const ContactForm = ({ onSubmit }) => {
+import { useSelector, useDispatch } from 'react-redux';
+import { getVisibleContacts } from 'redux/selectors';
+import { addContact } from 'redux/contactsSlice';
+
+const nameInputId = nanoid();
+const numberInputId = nanoid();
+
+const ContactForm = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
-  // Генерація унікальних ідентифікаторів полів форми.
-  const nameInputId = nanoid();
-  const numberInputId = nanoid();
+  const contacts = useSelector(getVisibleContacts);
+  const dispatch = useDispatch();
 
-  // Обробка відправлення форми.
   const handleSubmit = event => {
     event.preventDefault();
 
-    // Виклик функції onSubmit із батьківського компонента з передачею об'єкта контакту.
-    onSubmit({ name, number });
+    const isInContacts = contacts.some(
+      contact => contact.name.toLowerCase().trim() === name.toLowerCase().trim()
+    );
+
+    if (isInContacts) {
+      alert(`${name} is already in contacts`);
+      return;
+    }
+
+    dispatch(addContact({ name, number }));
     setName('');
     setNumber('');
   };
 
-  // Обробка зміни значень полів форми.
   const handleChange = event => {
     const { name, value } = event.target;
 

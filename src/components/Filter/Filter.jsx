@@ -1,7 +1,22 @@
 import React from 'react';
 
-// Компонент фільтрації контактів
-function Filter({ value, onChangeFilter }) {
+import { nanoid } from '@reduxjs/toolkit';
+import { useSelector, useDispatch } from 'react-redux';
+import { getFilter } from 'redux/selectors';
+import { changeFilter } from 'redux/filterSlice';
+
+const filterInputId = nanoid();
+
+function Filter() {
+  const value = useSelector(getFilter);
+  const dispatch = useDispatch();
+
+  const onChangeFilter = event => {
+    const normalizedValue = event.target.value.toLowerCase();
+
+    dispatch(changeFilter(normalizedValue));
+  };
+
   return (
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
       <label className="block text-sm font-medium leading-6 text-gray-900">
@@ -11,6 +26,7 @@ function Filter({ value, onChangeFilter }) {
           type="text"
           value={value}
           onChange={onChangeFilter}
+          id={filterInputId}
         />
       </label>
     </div>
