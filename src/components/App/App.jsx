@@ -1,9 +1,9 @@
-import { getContacts } from 'redux/selectors';
 import { useSelector } from 'react-redux';
 import { BiSolidContact } from 'react-icons/bi';
 import ContactForm from '../ContactForm/ContactForm';
 import ContactList from '../ContactList/ContactList';
 import Filter from '../Filter/Filter';
+import { getContacts } from '../../redux/selectors';
 
 const App = () => {
   const contacts = useSelector(getContacts);

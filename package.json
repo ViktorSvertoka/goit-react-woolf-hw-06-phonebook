@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://ViktorSvertoka.github.io/goit-react-woolf-hw-06-phonebook/",
   "dependencies": {
+    "@babel/runtime": "^7.24.0",
     "@reduxjs/toolkit": "^2.2.1",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
