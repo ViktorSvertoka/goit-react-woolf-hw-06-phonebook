@@ -18,7 +18,7 @@ function Filter() {
   };
 
   return (
-    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+    <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
       <label className="block text-sm font-medium leading-6 text-gray-900">
         Find contacts by name
         <input
